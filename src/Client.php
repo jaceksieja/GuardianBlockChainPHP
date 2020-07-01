@@ -16,7 +16,7 @@ class Client
     {
         $this->client = new \GuzzleHttp\Client(
             [
-                'base_uri' => getenv('GUARDIAN_SERVER') ?: self::DEFAULT_SERVER,
+                'base_uri' => getenv('BOOST_HOST') ?: self::DEFAULT_SERVER,
                 'timeout' => getenv('GUARDIAN_TIMEOUT') ?: self::DEFAULT_TIMEOUT,
                 'headers' => [
                     'Content-Type' => 'application/json',
