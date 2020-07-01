@@ -13,14 +13,15 @@ class CryptoTest extends TestCase
         $this->crypto = new CryptoService();
     }
 
-
-    public function testNewKeyPair(): void {
+    public function testNewKeyPair(): void
+    {
         $this->crypto->generateNewSet();
         $this->assertNotEmpty($this->crypto->getPrivateKey());
         $this->assertNotEmpty($this->crypto->getPublicKey());
     }
 
-    public function testSignature(): void {
+    public function testSignature(): void
+    {
         $this->crypto->generateNewSet();
         $payload = "This is a simple test";
         $signature = $this->crypto->sign($this->crypto->getPrivateKey(), $payload);
@@ -28,13 +29,15 @@ class CryptoTest extends TestCase
         $this->assertTrue(
             $this->crypto->verify(
                 $this->crypto->getPublicKey(),
-                $signature,$payload
+                $signature,
+                $payload
             )
         );
         $this->assertFalse(
             $this->crypto->verify(
                 $this->crypto->getPublicKey(),
-                $signature,$payload."x"
+                $signature,
+                $payload."x"
             )
         );
     }

@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace guardiansdk;
 
-use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
 class TransportService
 {
     protected $client;
-    protected $debug = false;
-    protected $server = 'http://prime.guardianbc.com/';
 
     /**
      * TransportService constructor.
@@ -19,12 +16,7 @@ class TransportService
      */
     public function __construct()
     {
-        $this->client = new Client(
-            [
-                'base_uri' => $this->server,
-                'timeout' => 3.0,
-            ]
-        );
+        $this->client = new Client();
     }
 
     /**
@@ -38,8 +30,7 @@ class TransportService
     public function getBalance(string $wallet): BalanceModel
     {
         $response = $this->client->get(
-            'wallet/' . $wallet,
-            $this->getHeaders()
+            'wallet/' . $wallet
         );
 
         return $this->parseBalance($response);
@@ -72,7 +63,7 @@ class TransportService
     {
         $response = $this->client->post(
             'wallet',
-            $this->getHeaders(\GuzzleHttp\json_encode(new WalletModel($publicKey)))
+            new WalletModel($publicKey)
         );
 
         return $this->parseWallet($response);
@@ -86,8 +77,9 @@ class TransportService
      */
     protected function parseWallet(ResponseInterface $response): WalletModel
     {
+        $contents = $response->getBody()->getContents();
         $responseObject = \GuzzleHttp\json_decode(
-            $response->getBody()->getContents()
+            $contents
         );
         $wallet = new WalletModel();
         $wallet->publicKey = $responseObject->publicKey;
@@ -105,32 +97,13 @@ class TransportService
     public function getHistory(string $wallet): array
     {
         $response = $this->client->get(
-            'transaction/' . $wallet,
-            $this->getHeaders()
+            'transaction/' . $wallet
         );
 
         return \GuzzleHttp\json_decode(
             $response->getBody()->getContents(),
             true
         );
-    }
-
-    /**
-     * Sets headers for API call
-     *
-     * @param  string|null $body
-     * @return array
-     */
-    protected function getHeaders(string $body = null): array
-    {
-        return [
-            'debug' => $this->debug,
-            'body' => $body,
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-        ];
     }
 
     /**
@@ -143,7 +116,7 @@ class TransportService
     {
         $response = $this->client->post(
             'transaction',
-            $this->getHeaders(\GuzzleHttp\json_encode($envelope))
+            $envelope
         );
         return $this->parseTransaction($response);
     }

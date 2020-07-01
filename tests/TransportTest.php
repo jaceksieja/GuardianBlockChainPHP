@@ -8,8 +8,9 @@ class TransportTest extends TestCase
 {
     private $transport;
 
-    public function setUp(): void {
-    $this->transport = new TransportService();
+    public function setUp(): void
+    {
+        $this->transport = new TransportService();
     }
 
     public function testBalance(): void
@@ -25,7 +26,8 @@ class TransportTest extends TestCase
         $response = $this->transport->getWalletAddress("asdasdsadsadsd");
         $this->assertEquals(
             "0f125463d0af398eb9deaa424d1c091e30885fed2ea0256d7b5884c19339b616",
-            $response->walletId);
+            $response->walletId
+        );
         $this->assertNotEmpty($response->publicKey);
     }
 

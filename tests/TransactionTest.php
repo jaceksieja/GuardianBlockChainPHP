@@ -17,7 +17,8 @@ class TransactionTest extends TestCase
         $this->transaction = new TransactionService();
     }
 
-    public function testDefault(): void {
+    public function testDefault(): void
+    {
         $this->assertNotEmpty($this->transaction);
     }
 
